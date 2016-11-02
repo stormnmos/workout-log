@@ -1,0 +1,2 @@
+{:require [workout-log.core]
+ :init-fns [workout-log.core/run]}

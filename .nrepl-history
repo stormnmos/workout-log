@@ -1,0 +1,208 @@
+ls
+l
+ls
+(require 'lang-site.core)
+(require 'datomic.api :as d)
+(require '[datomic.api :as d])
+(d/create-database
+)
+(d/create-database "datomic:couchbase://localhost:4334/datomic/lang-site/?password=password")
+exut
+exit
+(require '[lang-site.db.db :as db])
+exit
+(require 'lang-site.db.db-data)
+(require '[datomic.api :as d])
+(d/create-database "datomic:couchbase://localhost:4334/datomic/lang-site/?password=password")
+exit
+(d/create-database "
+jd
+")
+(d/create-database "jdbc:postgresql://localhost:5342/lang-site")
+(d/create-database "datomic:sql://lang-site?jdbc:postgresql://localhost:5432/datomic?user=datomic&password=datomic")
+(d/create-database "datomic:sql://lang-site?://localhost:5342/datomic?user=datomic&password=datomic")
+(d/create-database "datomic:sql://lang-site
+")
+(d/create-database "datomic:sql://lang-site")
+exit
+(require '[datomic.api :as d])
+(d/create-database "datomic:sql://lang-site?jdbc:postgresql://localhost:5342/datomic?user=datomic&password=datomic")
+(d/create-database "datomic:sql:postgresql://localhost:5342/datomic?user=datomic&password=datomic")
+(d/create-database "datomic:sql://lang-site?jdbc:postgresql://localhost:5342/datomic?user=datomic&password=datomic")
+(d/create-database "datomic:sql://datomic?jdbc:postgresql://localhost:5342/datomic?user=datomic&password=datomic")
+(d/create-database "datomic:sql://datomic?jdbc:postgresql://127.0.0.1:5342/datomic?user=datomic&password=datomic")
+(d/create-database "datomic:sql://datomic?jdbc:postgresql://127.0.0.1:5372/datomic?user=datomic&password=datomic")
+(d/connect "datomic:sql://datomic?jdbc:postgresql://localhost/datomic?user=datomic&password=datomic")
+(d/connect "datomic:sql://lang-site?jdbc:postgresql://localhost/datomic?user=datomic&password=datomic")
+(d/connect "datomic:sql://lang-site?jdbc:postgresql://localhost/?user=datomic&password=datomic")
+(d/connect "datomic:sql://datomic?jdbc:postgresql://localhost/?user=datomic&password=datomic")
+(d/connect "datomic:sql://datomic?jdbc:postgresql://localhost?user=datomic&password=datomic")
+(d/connect "datomic:sql://datomic?jdbc:postgresql://localhost/?user=datomic&password=datomic")
+(d/connect "datomic:sql://datomic?jdbc:postgresql://localhost/datomic?user=datomic&password=datomic")
+(d/connect "datomic:sql://datomic?jdbc:postgresql://127.0.0.1/datomic?user=datomic&password=datomic")
+(d/connect "datomic:mem://lang-site)
+:")
+(d/connect "datomic:mem://lang-site")
+(d/create-database "datomic:mem://lang-site")
+(d/connect "datomic:mem://lang-site")
+(d/connect "datomic:sql://datomic?jdbc:postgresql://127.0.0.1:41712?user=datomic&password=datomic")
+(d/connect "datomic:sql://datomic?jdbc:postgresql://127.0.0.1/41712?user=datomic&password=datomic")
+(d/connect "datomic:sql://datomic?jdbc:postgresql://127.0.0.1/lang-site?user=datomic&password=datomic")
+(d/connect "datomic:sql://datomic?jdbc:postgresql://127.0.0.1/datomic?user=datomic&password=datomic")
+(d/create-database "datomic:sql://datomic?jdbc:postgresql://127.0.0.1/datomic?user=datomic&password=datomic")
+(d/connnect "datomic:sql://datomic?jdbc:postgresql://127.0.0.1/datomic?user=datomic&password=datomic")
+(d/connect "datomic:sql://datomic?jdbc:postgresql://127.0.0.1/datomic?user=datomic&password=datomic")
+exit
+(require '[datomic.api :as d])
+(d/delete-database "datomic:sql://datomic?jdbc:postgresql://localhost:5432/datomic?user=datomic&password=datomic"
+)
+(d/delete-database "datomic:sql://datomic?jdbc:postgresql://localhost:5432/datomic?user=datomic&password=datomic")
+(d/delete-database "datomic:sql://storm?jdbc:postgresql://localhost:5432/datomic?user=datomic&password=datomic")
+(d/connect "datomic:sql://storm?jdbc:postgresql://localhost:5432/datomic?user=datomic&password=datomic")
+(d/connect "datomic:sql://datomic?jdbc:postgresql://localhost:5432/datomic?user=datomic&password=datomic")
+(d/connect "datomic:sql://datomic?jdbc:postgresql://localhost:5432/storm?user=datomic&password=datomic")
+(d/connect "datomic:sql://datomic?jdbc:postgresql://localhost:5432/datomic?user=datomic&password=datomic")
+(d/create-database "datomic:sql://datomic?jdbc:postgresql://localhost:5432/datomic?user=datomic&password=datomic")
+(d/connect "datomic:sql://datomic?jdbc:postgresql://localhost:5432/datomic?user=datomic&password=datomic")
+(d/delete-database "datomic:sql://datomic?jdbc:postgresql://localhost:5432/datomic?user=datomic&password=datomic"
+)
+(d/connect "datomic:sql://datomic?jdbc:postgresql://localhost:5432/datomic?user=datomic&password=datomic"
+)
+(d/create-database "datomic:sql://datomic?jdbc:postgresql://localhost:5432/datomic?user=datomic&password=datomic")
+(def conn (d/connect "datomic:sql://datomic?jdbc:postgresql://localhost:5432/datomic?user=datomic&password=datomic")
+)
+conn
+(def rdr-s (clojure.java.io/reader (env :sentence-file)))
+(require '[environ.core :refer [env]])
+(def rdr-s (clojure.java.io/reader (env :sentence-file)))
+(env :sentence-file)
+(def sentence-file "resources/data/sentences.csv")
+(def rdr-s (clojure.java.io/reader sentence-file
+)
+(def schema-tx (read-string (slurp "/home/storm/clojure/lang-site/resources/data/lang-site-schema.edn")))
+(d/transact conn schema-tx)
+(require '[lang-site.db.transaction-templates :as tt])
+(require '[lang-site.queries :as q])
+(require '[lang-site.db.queries :as q])
+(defn sentence-to-datomic [line]
+(->> line
+(split-by-tab)
+(tt/sentence)
+(d/transact conn)))
+(defn split-by-tab [s]
+(str/split s #"\t"))
+(require '[clojure.core.string :as str :only split])
+(require '[clojure.string :as str :only split])
+(defn split-by-tab [s]
+(str/split s #"\t"))
+(defn sentence-to-datomic [line]
+(->> line
+(split-by-tab)
+(tt/sentence)
+(d/transact conn)
+)
+(defn transact-senteces []
+(run! sentence-to-datomic (line-seq rdr-s)))
+(transact-sentenes
+)
+(transact-senteces)
+(run! sentence-to-datomic (line-seq rdr-s)
+)
+(line-seq rdr-s)
+(first (line-seq rdr-s))
+(run! sentence-to-datomic (line-seq rdr-s
+)
+(defn sentence->datomic [line] (->> line split-by-tab tt/sentence (d/transact conn)))
+(run! sentence->datomic (line-seq rdr-s))
+exit
+(require 'datomic.api)
+(d/create-database                 "datomic:couchbase://localhost:4334/datomic/lang-site/?password=password"
+)
+(require '[datomic.api :as d])
+)
+(d/create-database                 "datomic:couchbase://localhost:4334/datomic/lang-site/?password=password")
+exit
+(require datomic.api)
+(require 'datomic.api)
+"datomic:couchbase://localhost:4334/datomic/lang-site/?password=password"
+(require 
+'[datomic.api :as d])
+(d/create-database "datomic:couchbase://localhost:4334/datomic/lang-site/?password=password")
+exit
+(require 'lang-site.core)
+(require 'datomic.api)
+(require '[datomic.api :as d])
+(def conn-url "datomic:sql://datomic?jdbc:postgresql://localhost:5432/datomic?user=datomic&password=datomic")
+conn-url
+(def conn-url "datomic:sql://lang-site?jdbc:postgresql://localhost:5432/datomic?user=datomic&password=datomic")
+(def conn (d/connect conn-url))
+conn
+(d/transact conn "Hello World")
+(d/transact conn ["Hello World"])
+(d/transact conn [{"Hello World"}])
+(d/transact conn [{:sentence/id 10}])
+(d/transact conn [{:db/id :db.part/id :sentence/id 10}])
+(d/transact conn [{:db/id #db/id[:db.part/user] :sentence/id 10}])
+(d/transact conn [{:db/id #db/id[:db.part/user] :sentence/id 11}])
+(d/transact conn [{:db/id #db/id[:db.part/user] :sentence/id 12}])
+(d/transact conn [{:db/id #db/id[:db.part/user] :sentence/id 13}])
+(require 'lang-site.core)
+(ns lang-site.db.db-data)
+(transact-links)
+(transact-sentences)
+(first (line-seq rdr-s)
+)
+(require 'lang-site.core)
+(ns lang-site.db.db-data)
+(transact-sentences)
+(first (line-seq rdr-s))
+(transact-sentences)
+exit
+(require 'lang-site.core)
+ls
+(ns lang-site.db.db-data)
+(transact-links)
+(first (line-seq rdr-l)
+)
+(transact-links)
+(first (line-seq rdr-l))
+(transact-links)
+(first (line-seq rdr-l))
+(transact-links)
+(first (line-seq rdr-l))
+(require 'lang-site.core)
+(ns lang-site.db.db-data)
+(transact-links)
+(first (line-seq rdr-l))
+(transact-links)
+(first (line-seq rdr-l))
+exit
+(require 'lang-site.core)
+(ns lang-site.db.db-data
+)
+(transact-links)
+(first (line-seq rdr-l))
+(transact-links)
+(first (line-seq rdr-l))
+(transact-links)
+(first (line-seq rdr-l))
+(transact-links)
+(first (line-seq rdr-l))
+(transact-links)
+(first (line-seq rdr-l))
+(transact-links)
+(first (line-seq rdr-l))
+(transact-links)
+(first (line-seq rdr-l))
+(transact-links)
+(q/find-links
+)
+(count (q/find-links))
+(q/sample-sentence-group-squuid
+)
+(q/pull-translation-pair (q/sample-sentence-group-squuid))
+exit
+(require 'workout-log.core)
+(ns workout-log.db.db-data)
+(d/transact conn schema-tx)
+exit

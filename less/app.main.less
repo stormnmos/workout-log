@@ -1,0 +1,50 @@
+@black:  #111111;
+@white:  #ffffff;
+@blue:   #00b8d4;
+@purple: #ec407a;
+@orange: #ffab00;
+@green:  #00C853;
+@input-blue: #145eb8;
+
+.language-card.mdl-card {
+    //width: 400px;
+    //height: 340px;
+    .mdl-card__supporting-text {
+        height: 80%;
+    }
+    .mdl-card__menu {
+        color: @green
+    }
+}
+
+
+.sidebar {
+    position: fixed;
+    top: 51px;
+    bottom: 0;
+    left: 0;
+    z-index: 1000;
+    display: block;
+    padding: 20px;
+    overflow-x: hidden;
+    overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+    background-color: #f5f5f5;
+    border-right: 1px solid #eee;
+}
+
+/* Sidebar navigation */
+.nav-sidebar {
+  margin-right: -21px; /* 20px padding + 1px border */
+  margin-bottom: 20px;
+  margin-left: -20px;
+}
+.nav-sidebar > li > a {
+  padding-right: 20px;
+  padding-left: 20px;
+}
+.nav-sidebar > .active > a,
+.nav-sidebar > .active > a:hover,
+.nav-sidebar > .active > a:focus {
+  color: #fff;
+  background-color: #428bca;
+}

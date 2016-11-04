@@ -10,6 +10,8 @@
             [workout-log.requests :as req]
             [workout-log.state :refer [conn events]]
             [workout-log.spec :as spec]
+            [workout-log.components.stateless :as st]
+            [workout-log.components.bootstrap :as bs]
             [workout-log.components.templates :as t]
             [cljs.core.async :as async
              :refer [<! >! chan put! take! tap offer!]]
@@ -47,142 +49,89 @@
   (make-all widgets (map :db/id refs)))
 
 (defwidget :default
-  (fn [_]
-    [:h1 "Not finding component"]))
-
-(defwidget :widget/body
-  (fn [{:keys [:body/content]} _]
-    [:.container-fluid.row
-     "Body Content Begins in a Container-fluid"]))
-
+  (fn [{:keys [:db/id]}]
+    [:h1 "Not finding component: " id]))
 
 (defwidget :widget/workout
-  (fn [{:keys [:db/id
-               :workout/sets
-               :workout/time-start
-               :workout/time-stop
-               :workout/notes]}]
-    [:.container
-     [:.workout
-      "Workout"]]))
+  (fn [{:keys [:db/id :workout/sets :workout/time-start
+               :workout/time-stop :workout/notes]}]
+    [:.col-md-6.card
+     [:form
+      (st/form-id id)
+      (make-refs sets)
+      (st/form-track id :workout/time-start {:type "number" :placeholder time-start})
+      (st/form-track id :workout/time-stop {:type "time" :placeholder time-stop})
+      (make-refs notes)]]))
 
 (defwidget :widget/set
   (fn [{:keys [:db/id :set/type :set/reps :set/time :set/notes]}]
-    [:.container "SET"
-     [:.set "SET"]]))
+    [:.col-md-6.card
+     [:form
+      (st/form-id id)
+      (st/form-track id :set/type {:type "text" :placeholder type})
+      (st/form-track id :set/reps {:type "number" :placeholder reps})
+      (st/form-track id :set/time {:type "time" :placeholder time})
+      (make-refs notes)]]))
 
 (defwidget :widget/exercise
   (fn [{:keys [:db/id :exercise/name]}]
-    [:.col-md-6
-     [:.input-group
-      [:span.input-group-addon "ID"]
-      [:input.form-control {:value id :disabled "true"}]]
-     [:.input-group
-      [:span.input-group-addon "Exercise"]
-      [:input.form-control
-       {:placeholder name
-        :onKeyUp (partial a/track-input id :exercise/name)}]]
-     [:button {:onClick #(req/post "/api/transact"
-                                   {:tx [{:db/id id
-                                          :exercise/name name}]}
-                                   identity)}
-      "Submit"]
-     [:button {:onClick #(req/post "/api/transact"
-                                   {:tx [[:db.fn/retractEntity id]]}
-                                   identity)}
-      "Remove"]]))
+    [:.col-md-7.card
+     [:.card-title "Edit Exercise"]
+     [:form
+      (st/form-id id)
+      (st/form-track id :exercise/name {:type "text" :placeholder name})]
+     (st/transact-button {:db/id id :exercise/name name})
+     (st/remove-button id)]))
 
 (defwidget :widget/note
   (fn [{:keys [:db/id :note/text]}]
-    [:.col-md-6
-     [:.input-group
-      [:span.input-group-addon "ID"]
-      [:input.form-control {:value id :disabled "true"}]]
-     [:.input-group
-      [:span.input-group-addon "Name"]
-      [:input.form-control
-       {:placeholder text
-        :onKeyUp (partial a/track-input id :note/text)}]]
-     [:button {:onClick #(req/post "/api/transact"
-                                   {:tx [{:db/id id
-                                          :note/text text}]}
-                                   identity)}
-      "Submit"]
-     [:button {:onClick #(req/post "/api/transact"
-                                   {:tx [[:db.fn/retractEntity id]]}
-                                   identity)}
-      "Remove"]]))
-
-(defn user [{:keys [:db/id :user/name :user/password :user/email]} _]
-  [:.col-md-4
-   [:.input-group
-    [:span.input-group-addon "ID"]
-    [:input.form-control {:value id :disabled "true"}]]
-   [:.input-group
-    [:span.input-group-addon "Name"]
-    [:input.form-control
-     {:placeholder name
-      :onKeyUp (partial a/track-input id :user/name)}]]
-   [:.input-group
-    [:span.input-group-addon "Email"]
-    [:input.form-control
-     {:placeholder email
-      :onKeyUp (partial a/track-input id :user/email)}]]
-   [:.input-group
-    [:span.input-group-addon "Password"]
-    [:input.form-control
-     {:placeholder password
-      :onKeyUp (partial a/track-input id :user/password)}]]
-   [:button {:onClick #(req/post "/api/transact"
-                                 {:tx [{:db/id id
-                                        :user/name name
-                                        :user/email email
-                                        :user/password password}]}
-                                 identity)}
-    "Submit"]
-   [:button {:onClick #(req/post "/api/transact"
-                                 {:tx [[:db.fn/retractEntity id]]}
-                                 identity)}
-    "Remove"]])
-
-(defwidget :widget/add-exercise
-  (fn [{:keys [:db/id
-               :add-exercise/name]} _]
-    [:.col.md-4
-     [:.input-group
-      [:span.input-group-addon "Exercise"]
-      [:input.form-control
-       {:placeholder "Exercise"}]]
-     [:button {:onClick #(req/post "/api/add"
-                                   {:exercise/name name}
-                                   identity)}
-      "Add Exercise"]]))
-
-(defwidget :widget/add-note
-  (fn [{:keys [:db/id
-               :add-note/text]} owner]
-
-    [:.col-md-4
-     [:.input-group
-      [:span.input-group-addon "Text"]
-      [:input.form-control
-       {:placeholder "Text"
-        :onKeyUp (partial a/track-input id :add-note/text)}]]
-     [:button {:onClick #(req/post "/api/add"
-                                   {:note/text text}
-                                   identity)}
-      "Add Note"]]))
-
-(defwidget :widget/user user)
+    [:.col-md-6.card
+     [:.card-title "Edit Note"]
+     [:form
+      (st/form-id id)
+      (st/form-track id :note/text {:type "text" :placeholder text})]
+     (st/transact-button {:db/id id :note/text text})
+     (st/remove-button id)]))
 
 (defwidget :widget/rep
   (fn [{:keys [:db/id :rep/exercise :rep/weight :rep/time :rep/notes]}]
-    [:.container "REP" [:br]
-     [:.rep
-      [:h2 exercise]
-      [:h4 weight]
-      [:h4 time]
-      [:h4 (make-refs notes)]]]))
+    [:.col-md-6.card
+     [:.card-title "Edit Rep"]
+     [:form.row
+      (st/form-id id)
+      (st/form-track id :rep/weight {:type "number" :placeholder weight})
+      (st/form-track id :rep/time {:type "time" :placeholder time})
+      #_ (make-refs exercise)
+      (make-refs notes)]]))
+
+(defn user [{:keys [:db/id :user/name :user/password :user/email]} _]
+  [:.col-md-7.card
+   [:.card-title "Edit User"]
+   [:form
+    (st/form-id id)
+    (st/form-track id :user/name {:type "text" :placeholder name})
+    (st/form-track id :user/email {:type "email" :placeholder email})
+    (st/form-track id :user/password {:type "password" :placeholder password})]
+   (st/transact-button {:db/id id :user/name name
+                        :user/email email :user/password password})
+   (st/remove-button id)])
+
+(defwidget :widget/add-exercise
+  (fn [{:keys [:db/id add-exercise/name]} _]
+    [:.col.md-4
+     [:form
+      (st/form-track id :add-exercise/name {:type "text" :placeholder name})]
+     (st/add-button {:exercise/name name})]))
+
+(defwidget :widget/add-note
+  (fn [{:keys [:db/id :add-note/text]} owner]
+    [:.col-md-4
+     [:.card
+      [:.card-title "Add Note"]
+      [:form (st/form-track id :add-note/text {:type "text" :placeholder text})]]
+     (st/add-button {:note/text text})]))
+
+(defwidget :widget/user user)
 
 (defwidget :widget/reps
   (fn [{:keys [:db/id :reps/content]}]
@@ -190,13 +139,9 @@
      [:.row [:h3 "Reps"]]
      [:.row (make-refs content)]])
   om/IDidMount
-  (did-mount
-   [this]
-   (req/set-att!
-    {:att :rep/exercise}
-    (db/get-widget :widget/reps)
-    :reps/content
-    :widget/rep)))
+  (did-mount [this]
+    (req/set-att! {:att :rep/exercise} (db/get-widget :widget/reps)
+                  :reps/content :widget/rep)))
 
 (defwidget :widget/notes
   (fn [{:keys [:db/id :notes/content]}]
@@ -204,27 +149,20 @@
      [:.row [:h3 "Notes"]]
      [:.row (make-refs content)]])
   om/IDidMount
-  (did-mount
-   [this]
-   (req/set-att!
-    {:att :note/text}
-    (db/get-widget :widget/notes)
-    :notes/content
-    :widget/note)))
+  (did-mount [this]
+   (req/set-att! {:att :note/text} (db/get-widget :widget/notes)
+                 :notes/content :widget/note)))
 
 (defwidget :widget/users
-  (fn [{:keys [:db/id :users/content]}]
+  (fn [{:keys [:db/id :users/content :users/add-user]}]
     [:.col-md-12
      [:.row [:h2 "Edit Users"]]
-     [:.row (make-refs content)]])
+     [:.row (make-refs content)]
+     [:button "Add User"]])
   om/IDidMount
-  (did-mount
-   [this]
-   (req/set-att!
-    {:att :user/name}
-    (db/get-widget :widget/users)
-    :users/content
-    :widget/user)))
+  (did-mount [this]
+   (req/set-att! {:att :user/name} (db/get-widget :widget/users)
+                 :users/content :widget/user)))
 
 (defwidget :widget/exercises
   (fn [{:keys [:db/id :exercises/content]}]
@@ -232,42 +170,22 @@
      [:.row [:h2 "Exercises"]]
      [:.row (make-refs content)]])
   om/IDidMount
-  (did-mount
-   [this]
-   (req/set-att!
-    {:att :exercise/name}
-    (db/get-widget :widget/exercises)
-    :exercises/content
-    :widget/exercise)))
+  (did-mount [this]
+   (req/set-att! {:att :exercise/name} (db/get-widget :widget/exercises)
+    :exercises/content :widget/exercise)))
 
-(defn add-user [{:keys [:db/id
-                        :add-user/username
-                        :add-user/email
-                        :add-user/password
-                        :add-user/password-confirmation]} _]
-  [:.card.card-block
-   [:.card-title id]
-   [:.input-group
-    [:span.input-group-addon "Name"]
-    [:input.form-control
-     {:placeholder username
-      :onKeyUp (partial a/track-input id :add-user/username)}]]
-   [:.input-group
-    [:span.input-group-addon "Email"]
-    [:input.form-control
-     {:placeholder email
-      :onKeyUp (partial a/track-input id :add-user/email)}]]
-   [:.input-group
-    [:span.input-group-addon "Password"]
-    [:input.form-control
-     {:placeholder password
-      :onKeyUp (partial a/track-input id :add-user/password)}]]
-   [:button {:onClick #(do (req/post "/api/add-user"
-                                     {:user/name username
-                                      :user/email email
-                                      :user/password password}
-                                     identity))}
-    "Add User"]])
+(defn add-user
+  [{:keys [:db/id :add-user/username :add-user/email
+           :add-user/password :add-user/password-confirmation]} _]
+  [:.card
+   [:.card-title "Add User"]
+   [:form
+    (st/form-id id)
+    (st/form-track id :add-user/username {:type "text" :placeholder username})
+    (st/form-track id :add-user/email {:type "email" :placeholder email})
+    (st/form-track id :add-user/password {:type "password" :placeholder password})
+    (st/form-track id :add-user/password-confirmation {:type "password"})]
+   (st/add-button {:user/name username :user/email email :user/password password})])
 (defwidget :widget/add-user add-user)
 
 (defwidget :widget/footer
@@ -298,11 +216,7 @@
        [:a.nav-item.nav-link {:href "#"} "Dashboard"]
        [:a.nav-item.nav-link {:href "#"} "Settings"]
        [:a.nav-item.nav-link {:href "#"} "Profile"]
-       [:a.nav-item.nav-link {:heft "#"} "Help"]]]
-     #_[:form.float-xs-right
-      [:input.form-control
-       {:type "text"
-        :placeholder "Search"}]]]))
+       [:a.nav-item.nav-link {:heft "#"} "Help"]]]]))
 
 (defwidget :widget/page
   (fn [{:keys [:page/content]} _]

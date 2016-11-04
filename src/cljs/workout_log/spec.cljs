@@ -167,9 +167,10 @@
           :opt [:user/password :user/email]))
 
 (s/def :users/content :widget/refs)
+(s/def :users/add-user :widget/ref)
 (defmethod widget :widget/users [_]
   (s/keys :req [:widget/type]
-          :opt [:widget/refs]))
+          :opt [:users/content :users/add-user]))
 
 (s/def :user-card/user :widget/ref)
 (s/def :user-card/data :widget/ref)

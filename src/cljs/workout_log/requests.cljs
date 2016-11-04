@@ -49,3 +49,13 @@
             (map (fn [r]
                    (merge {:widget/type :widget/user} r))
                  (flatten results))}])))
+
+
+(defn add [tx-map]
+  #(post "/api/add" tx-map identity))
+
+(defn transact [tx]
+  #(post "/api/transact" {:tx [tx]} identity))
+
+(defn remove-id [id]
+  #(post "/api/transact" {:tx [[:db.fn/retractEntity id]]} identity))

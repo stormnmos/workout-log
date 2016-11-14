@@ -3,9 +3,9 @@
 (defmacro defwidget
   "Docstring for macro"
   [key f & body]
-  `(defmethod widgets ~key [eid# owner#]
+  `(defmethod workout-log.components.utils/widgets ~key [eid# owner#]
      (reify
-       Widget
+       workout-log.components.utils/Widget
        ~@body
        om/IDisplayName
        (~(symbol "display-name") [this#]

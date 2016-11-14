@@ -21,12 +21,13 @@
 (mount/start)
 
 (def handler
-  (-> h/routes
+  (-> h/handler
       (transit/wrap-transit-params)
       (transit/wrap-transit-response {:encoding :json})
       (wrap-session)))
 
 ;;; Main handler for transacting into datomic
+;;; TODO: make part of mount initialization
 (async/go
   (while true
     (let [unvalidated-tx (async/<! tx-chan)]

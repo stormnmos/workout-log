@@ -26,19 +26,6 @@
 
 (enable-console-print!)
 
-(defroute api-schema "/api/schema" []
-  (req/http-get "/api/schema" identity))
-(defroute users "#/api/users" []
-  (req/http-get "/api/users" templates/make-users))
-(defroute register "/#api/register" []
-  (req/http-get "/api/users" identity))
-(defroute language-ids "/language-ids" []
-  nil)
-(defroute translation-group "#/translation-group" []
-  (req/http-get "/translation-group" templates/card))
-(defroute query "#/api/query" [data]
-  (req/http-get "/api/query" templates/card))
-
 (defn run []
   (secretary/set-config! :prefix "#")
   (s/check-asserts true)

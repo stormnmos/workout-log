@@ -58,7 +58,7 @@
           (repeat (d/db @conn))]))
 
 (defn get-widgets [type]
-  (d/q '[:find ?e
+  (d/q '[:find [?e ...]
            :in $ ?v
            :where [?e :widget/type ?v]]
          (d/db @conn) type))

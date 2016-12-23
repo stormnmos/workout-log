@@ -1,0 +1,2 @@
+{:require [workout-log.pages.login]
+ :init-fns [workout-log.pages.login/run]}

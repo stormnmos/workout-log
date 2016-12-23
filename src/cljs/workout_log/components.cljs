@@ -32,14 +32,12 @@
 (defwidget :widget/lifts        full/lift) ;; Create
 (defwidget :widget/add-lift     full/lift) ;; Create
 
-(defwidget :widget/set          full/lift)
-
 (defwidget :widget/user         full/user)
 (defwidget :widget/users        full/users)
 (defwidget :widget/add-user     full/add-user)
 
 (defwidget :widget/workout      full/workout)
-(defwidget :widget/add-workout  full/workout) ;; Create
+(defwidget :widget/add-workout  full/add-workout) ;; Create
 (defwidget :widget/workouts     full/workout) ;; Create
 
 (defwidget :widget/footer       full/footer)
@@ -57,8 +55,18 @@
       (db/get-widget :widget/notes) :notes/content :widget/note)
     (req/set-att! {:att :workout/sets}
       (db/get-widget :widget/workout) :workouts/content :widget/workout)))
+
+(defwidget :login/page (fn [_ _] nil))
+
 (defn widget [_]
   (reify
     om/IRender
     (render [this]
       (make widgets (db/get-widget :widget/page)))))
+
+
+(defn login [_]
+  (reify
+    om/IRender
+    (render [this]
+      (make widgets (db/get-widget :widget/login)))))

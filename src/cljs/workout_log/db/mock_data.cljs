@@ -10,6 +10,8 @@
                :add-user/email :add-user/password
                :add-user/password-confirmation])
 (def add-note [:widget/add-note :note/text])
+(def add-rep [:widget/add-rep :add-rep/exercise :add-rep/time
+              :add-rep/notes :add-rep/weight])
 (def add-workout [:widget/add-workout :add-workout/time-start
                   :add-workout/time-stop :add-workout/sets :add-workout/notes])
 (def workout [:widget/workout :workout/sets :workout/time-start
@@ -44,6 +46,8 @@
    :set/reps      (merge many ref com)
    :rep/exercise  (merge      ref com)
    :rep/notes     (merge many ref com)
+   :add-rep/exercise (merge ref com)
+   :add-rep/notes (merge many ref com)
    :exercise/categories (merge many)
    :widget/type  {:db/index true}})
 
@@ -58,7 +62,7 @@
          [exercises -12]
          [reps -13]
          [notes -14]
-         [page     -1 [-2 -3 -11 -5 -12 #_ -13 -14 -15 -6 -7 -8 -10 -4]]
+         [page     -1 [-2 -3 -11 -5 -12 #_ -13 -14  -6 -7 -8 -10 -4]]
          [header   -2]
          [body     -3]
          [footer   -4]
@@ -68,5 +72,6 @@
          [exercise -7 "Deadlift"]
          [rep -8 -7 200 0 [-6 -9]]
          [add-note -10]
-         [add-exercise -15]
-         [add-workout -16]]))
+         [add-exercise -15 "test"]
+         [add-workout -16 0 0]
+         [add-rep]]))

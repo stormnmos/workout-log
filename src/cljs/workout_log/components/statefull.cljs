@@ -18,6 +18,7 @@
 
 (defn add-exercise [{:keys [:db/id add-exercise/name]} _]
   [:.card.card-block
+   [:h4.card-title "Add Exercise"]
    [:form
     (st/form-track id :add-exercise/name {:type "text" :placeholder name})]
    (st/add-button {:exercise/name name})])
@@ -84,13 +85,14 @@
    (st/add-button {:note/text text})])
 
 (defn add-workout [{:keys [:db/id :add-workout/sets :add-workout/time-start
-                           :add-workout/time-stop :add-workout/notes]}]
-  [:.card.card-block
-   [:h3.card-title "Add Workout"]
-   [:form
-    (st/form-track id :add-workout/time-start {:type "time" :placeholder time-start})
-    (st/form-track id :add-workout/time-stop {:type "time" :placeholder time-stop})]
-   (st/add-button {:workout/time-start time-start :workout/time-stop time-stop})])
+                           :add-workout/time-stop :add-workout/notes]} _]
+  (let [exercise-names nil]
+    [:.card.card-block
+     [:h3.card-title "Add Workout"]
+     [:form
+      (st/form-track id :add-workout/time-start {:type "time" :placeholder time-start})
+      (st/form-track id :add-workout/time-stop {:type "time" :placeholder time-stop})]
+     (st/add-button {:workout/time-start time-start :workout/time-stop time-stop})]))
 
 (defn notes [{:keys [:db/id :notes/content]} _]
   [:.col-md-12
@@ -98,7 +100,7 @@
    [:.row (u/make-refs content)]])
 
 (defn rep [{:keys [:db/id :rep/exercise :rep/weight :rep/time :rep/notes]} _]
-  [:.card.card-title
+  [:.card
    [:h3.card-title "Edit Rep"]
    [:form.row
     (st/form-id id)
@@ -112,9 +114,13 @@
    [:h3.card-title "Add Rep"]
    [:form
     (st/form-id id)
+    (let [exercises (map :exercise/name (db/pull-widgets :widget/exercise))]
+      [:h3 (str exercises)])
     (st/form-track id :add-rep/exercise {:type "text" :placeholder exercise})
     (st/form-track id :add-rep/weight {:type "number" :placeholder weight})
-    (st/form-track id :add-rep/time {:type "number" :placeholder time})]])
+    (st/form-track id :add-rep/time {:type "number" :placeholder time})]
+   (st/add-button {:rep/exercise exercise :rep/notes notes
+                   :rep/weight weight :rep/time time})])
 
 (defn reps [{:keys [:db/id :reps/content]} _]
   [:.col-md-12
@@ -123,7 +129,8 @@
 
 (defn workout [{:keys [:db/id :workout/sets :workout/time-start
                            :workout/time-stop :workout/notes]} _]
-  [:.card.card-title
+  [:.card.card-block
+   [:h3.card-title "Workout"]
    [:form
     (st/form-id id)
     (u/make-refs sets)
@@ -160,39 +167,65 @@
      [:a.nav-item.nav-link {:href "/about.html"} "About"]]]])
 
 (defn page [{:keys [:page/content]} _]
-  [:.container.fluid
-   [:.row
-    [:h1 "Space"]
-    [:h4 "Workout Log - Beta"]]
-   [:div
-    [:ul.nav.nav-pills {:role "tablist"}
-     [:li.nav-item
-      [:a.nav-link.active {:data-toggle "tab" :href "#new" :role "tab"} "New"]]
-     [:li.nav-item
-      [:a.nav-link {:data-toggle "tab" :href "#users" :role "tab"} "Users"]]
-     [:li.nav-item
-      [:a.nav-link {:data-toggle "tab" :href "#exercises" :role "tab"} "Exercises"]]
-     [:li.nav-item
-      [:a.nav-link {:data-toggle "tab" :href "#notes" :role "tab"} "Notes"]]
-     [:li.nav-item
-      [:a.nav-link {:data-toggle "tab" :href "#workouts" :role "tab"} "Workouts"]]
-     [:li.nav-item
-      [:a.nav-link {:data-toggle "tab" :href "#lifts" :role "tab"} "Lifts"]]]
-    [:.tab-content
-     [:.tab-pane.active.fade.in {:id "new" :role "tabpanel"}
-      (u/make u/widgets (first (db/get-widgets :widget/add-user)))]
-     [:.tab-pane.fade {:id "users" :role "tabpanel"}
-      (u/make-all u/widgets (db/get-widgets :widget/user))
-      (u/make u/widgets (first (db/get-widgets :widget/add-user)))]
-     [:.tab-pane.fade {:id "exercises" :role "tabpanel"}
-      (u/make-all u/widgets (db/get-widgets :widget/exercise))
-      (u/make-all u/widgets (db/get-widgets :widget/add-exercise))]
-     [:.tab-pane.fade {:id "notes" :role "tabpanel"}
-      (u/make-all u/widgets (db/get-widgets :widget/note))
-      (u/make u/widgets (first (db/get-widgets :widget/add-note)))]
-     [:.tab-pane.fade {:id "workouts" :role "tabpanel"}
-      (u/make-all u/widgets (db/get-widgets :widget/workout))
-      #_(u/make u/widgets (first (db/get-widgets :widget/add-workout)))]
-     [:.tab-pane.fade {:id "lifts" :role "tabpanel"}
-      (u/make-all u/widgets (db/get-widgets :widget/lift))
-      #_(u/make u/widgets (first (db/get-widgets :widget/add-lift)))]]]])
+  [:.app
+   (header 1 2)
+   [:p "text"]
+   [:h4 "SPACER"]
+   [:.container.fluid
+    [:.row
+     [:h4 "Workout Log - Beta"]]
+    [:div.page
+     [:ul.nav.nav-pills {:role "tablist"}
+      [:li.nav-item
+       [:a.nav-link.active {:data-toggle "tab" :href "#new" :role "tab"} "New"]]
+      [:li.nav-item
+       [:a.nav-link {:data-toggle "tab" :href "#users" :role "tab"} "Users"]]
+      [:li.nav-item
+       [:a.nav-link {:data-toggle "tab" :href "#exercises" :role "tab"} "Exercises"]]
+      [:li.nav-item
+       [:a.nav-link {:data-toggle "tab" :href "#notes" :role "tab"} "Notes"]]
+      [:li.nav-item
+       [:a.nav-link {:data-toggle "tab" :href "#workouts" :role "tab"} "Workouts"]]
+      [:li.nav-item
+       [:a.nav-link {:data-toggle "tab" :href "#lifts" :role "tab"} "Lifts"]]
+      [:li.nav-item
+       [:a.nav-link {:data-toggle "tab" :href "#reps" :role "tab"} "Reps"]]
+      [:li.nav-item
+       [:a.nav-link {:data-toggle "tab" :href "#all" :role "tab"} "All"]]]
+     [:.tab-content
+      [:.tab-pane.active.fade.in {:id "new" :role "tabpanel"}
+       (u/make u/widgets (first (db/get-widgets :widget/add-user)))
+       (map st/render-map (db/pull-widgets :widget/add-workout))
+       (u/make u/widgets (first (db/get-widgets :widget/add-workout)))]
+      [:.tab-pane.fade {:id "users" :role "tabpanel"}
+       (map st/render-map (db/pull-widgets :widget/user))
+       (u/make u/widgets (first (db/get-widgets :widget/add-user)))]
+      [:.tab-pane.fade {:id "exercises" :role "tabpanel"}
+       (map st/render-map (sort-by :db/id (db/pull-widgets :widget/exercise)))
+       (u/make-all u/widgets (db/get-widgets :widget/add-exercise))]
+      [:.tab-pane.fade {:id "notes" :role "tabpanel"}
+       (map st/render-map (db/pull-widgets :widget/note))
+       #_(u/make u/widgets (first (db/get-widgets :widget/add-note)))]
+      [:.tab-pane.fade {:id "workouts" :role "tabpanel"}
+       (map st/render-map (db/pull-widgets :widget/workout))
+       (u/make u/widgets (first (db/get-widgets :widget/add-workout)))]
+      [:.tab-pane.fade {:id "lifts" :role "tabpanel"}
+       (map st/render-map (db/pull-widgets :widget/lift))
+       #_(u/make u/widgets (first (db/get-widgets :widget/add-lift)))]
+      [:.tab-pane.fade {:id "reps" :role "tabpanel"}
+       (map st/render-map (db/pull-widgets :widget/rep))
+       (u/make u/widgets (first (db/get-widgets :widget/add-rep)))]
+      [:.tab-pane.fade {:id "all" :role "tabpanel"}
+       #_(map st/render-map  )]]]]
+   (footer 1 2)])
+
+(defn login-page [{:keys [:login/content]} _]
+  [:.app
+   (header 1 2)
+   [:p "text"]
+   [:h4 "SPACER"]
+   [:.container.fluid
+    [:.row
+     [:h4 "Workout Log - Login"]]
+    [:div.page
+     :p "Insert login fields here"]]])

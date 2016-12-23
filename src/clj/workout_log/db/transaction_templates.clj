@@ -1,11 +1,8 @@
 (ns workout-log.db.transaction-templates
   (:require [datomic.api :as d]))
 
-(defn add [add-tx]
-  {:type :add
-   :tx [(merge
-         {:db/id #db/id[:db.part/user]}
-         add-tx)]})
+(defn add [tx]
+  [(merge {:db/id #db/id[:db.part/user]} tx)])
 
 (defn add-user [user-map]
   {:type :add-user

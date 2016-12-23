@@ -57,11 +57,17 @@
                 (map :db/id))
           (repeat (d/db @conn))]))
 
+(defn pull-widgets [type]
+  (d/q '[:find [(pull ?e [*]) ...]
+         :in $ ?v
+         :where [?e :widget/type ?v]]
+       (d/db @conn) type))
+
 (defn get-widgets [type]
   (d/q '[:find [?e ...]
-           :in $ ?v
-           :where [?e :widget/type ?v]]
-         (d/db @conn) type))
+         :in $ ?v
+         :where [?e :widget/type ?v]]
+       (d/db @conn) type))
 
 (defn get-widget [type]
   (d/q '[:find (min ?e) .

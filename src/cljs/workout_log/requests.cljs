@@ -7,18 +7,11 @@
   (:require-macros
    [cljs.core.async.macros :refer [go]]))
 
-(defn post
-  ([uri param-map]
-   (http/post uri {:transit-params param-map
-                   :channel (async/chan 1 (comp (map :body)))}))
-  ([uri param-map template]
-   (async/pipe
-    (http/post
-     uri
-     {:channel (async/chan 1 (comp (map :body) (map template)))
-      :transit-params param-map})
-    @events
-    false)))
+(defn post [uri param-map template]
+  (async/pipe
+   (http/post
+    uri {:channel (async/chan 1 (comp (map :body) (map template)))
+         :transit-params param-map}) @events false))
 
 (defn set-att! [param-map id attribute type]
   (post "/api/att" param-map (partial t/sync-att id attribute type)))

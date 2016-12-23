@@ -26,6 +26,15 @@
           :opt [:add-exercise/name
                 ]))
 
+(s/def :add-lift/weight number?)
+(s/def :add-lift/exercise :widget/ref)
+(s/def :add-lift/time number?)
+(s/def :add-lift/reps :widget/ref)
+(defmethod widget :widget/add-lift [_]
+  (s/keys :req [:widget/type]
+          :opt [:add-lift/weight :add-lift/exercise
+                :add-lift/time :add-lift/refps]))
+
 (s/def :add-note/text string?)
 (defmethod widget :widget/add-note [_]
   (s/keys :req [:widget/type] :opt [:add-note/text]))
@@ -38,6 +47,24 @@
   (s/keys :req [:widget/type] :opt [:add-user/email :add-user/password
                                     :add-user/username
                                     :add-user/password-confirmation]))
+
+(s/def :add-rep/exercise :widget/ref)
+(s/def :add-rep/notes :widget/refs)
+(s/def :add-rep/time number?)
+(s/def :add-rep/weight number?)
+(defmethod widget :widget/add-rep [_]
+  (s/keys :req [:widget/type]
+          :opt [:add-rep/exercise :add-rep/notes
+                :add-rep/time :add-rep/weight]))
+
+(s/def :add-workout/notes :widget/refs)
+(s/def :add-workout/sets :widget/refs)
+(s/def :add-workout/time-start number?)
+(s/def :add-workout/time-stop number?)
+(defmethod widget :widget/add-workout [_]
+  (s/keys :req [:widget/type]
+          :opt [:add-workout/notes :add-workout/sets
+                :add-workout/time-start :add-workout/time-stop]))
 
 (s/def :body/content :widget/ref)
 (defmethod widget :widget/body [_]

@@ -15,9 +15,8 @@
 
 (defn add [request]
   (res/response
-   (let [result
-         (async/>!! tx-chan (tt/add (:transit-params request)))]
-     (if result "true" "false"))))
+   (let [fut (d/transact-async conn (tt/add (:transit-params request)))]
+     (:tempids (deref fut)))))
 
 (defn att [request]
   (res/response (q/pull-att (get-in request [:transit-params :att]))))
